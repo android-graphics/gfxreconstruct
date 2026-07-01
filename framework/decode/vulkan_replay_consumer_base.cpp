@@ -393,7 +393,6 @@ void VulkanReplayConsumerBase::ProcessStateBeginMarker(uint64_t frame_number)
 
 void VulkanReplayConsumerBase::ProcessStateEndMarker(uint64_t frame_number)
 {
-    GFXRECON_UNREFERENCED_PARAMETER(frame_number);
     loading_trim_state_ = false;
     if (fps_info_ != nullptr)
     {
@@ -404,6 +403,8 @@ void VulkanReplayConsumerBase::ProcessStateEndMarker(uint64_t frame_number)
     {
         resource_dumper_->ProcessStateEndMarker();
     }
+
+    application_->GetReplayEventSink()->StateLoadingComplete(frame_number);
 }
 
 void VulkanReplayConsumerBase::ProcessDisplayMessageCommand(const std::string& message)
