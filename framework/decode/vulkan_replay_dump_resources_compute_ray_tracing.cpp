@@ -553,7 +553,8 @@ void DispatchTraceRaysDumpingContext::CopyImageResource(const VulkanImageInfo* s
     const auto img_layout_entry = original_command_buffer_info_->image_layout_barriers.find(src_image_info->capture_id);
     if (img_layout_entry != original_command_buffer_info_->image_layout_barriers.end())
     {
-        old_layout = img_layout_entry->second;
+        old_layout =
+            img_layout_entry->second.empty() ? VK_IMAGE_LAYOUT_GENERAL : img_layout_entry->second.back().layout;
     }
     else
     {
@@ -1411,8 +1412,10 @@ VkResult DispatchTraceRaysDumpingContext::DumpMutableResources(const DumpedResou
                 const auto& cloned_image =
                     static_cast<const MutableResourcesBackupContext::ClonedImageDescriptor&>(*cloned_desc);
 
-                const ImageDumpResult can_dump_image =
-                    CanDumpImage(instance_table_, device_info->parent, &cloned_image.new_image_info);
+                const ImageDumpResult can_dump_image = CanDumpImage(instance_table_,
+                                                                    device_info->parent,
+                                                                    &cloned_image.new_image_info,
+                                                                    device_info->property_feature_info);
 
                 auto& new_dumped_desc = dumped_resources.dumped_descriptors.emplace_back(
                     dumped_resource_base,
@@ -1684,7 +1687,8 @@ VkResult DispatchTraceRaysDumpingContext::DumpDescriptors(const DumpedResourceBa
                         continue;
                     }
 
-                    const ImageDumpResult can_dump_image = CanDumpImage(instance_table_, device_info->parent, img_info);
+                    const ImageDumpResult can_dump_image = CanDumpImage(
+                        instance_table_, device_info->parent, img_info, device_info->property_feature_info);
 
                     auto& new_dumped_desc = dumped_resources.dumped_descriptors.emplace_back(
                         dumped_resource_base,
@@ -2171,6 +2175,7 @@ VkResult DispatchTraceRaysDumpingContext::FetchIndirectParams()
                                                 device_info->parent,
                                                 *device_table_,
                                                 *instance_table_,
+                                                device_info->property_feature_info,
                                                 *phys_dev_info->replay_device_info->memory_properties);
 
     for (auto& params : dispatch_params_)

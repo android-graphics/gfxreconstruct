@@ -50,12 +50,23 @@ struct ApiCallInfo
     format::ThreadId thread_id{ 0 };
 };
 
+class LoopStartListener
+{
+  public:
+    virtual ~LoopStartListener() {}
+    virtual void OnLoopStart() = 0;
+};
+
 class ApiDecoder
 {
   public:
     virtual ~ApiDecoder() {}
 
     virtual void WaitIdle() = 0;
+
+    virtual void OnLoopStart() {}
+
+    virtual void OnFrameBegin() {}
 
     virtual bool IsComplete(uint64_t block_index) = 0;
 

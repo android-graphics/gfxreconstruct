@@ -30,8 +30,14 @@ class KhronosFrameLoopConsumerBaseHeaderGenerator():
     """
 
     def skip_generating_command(self, command):
-        return ((command not in self.REPLAY_FRAME_LOOP_RESOURCE_ALLOCATE_OVERRIDES) and
-                (command not in self.REPLAY_FRAME_LOOP_RESOURCE_FREE_OVERRIDES))
+        return (command not in
+                (self.REPLAY_FRAME_LOOP_RESOURCE_ALLOCATE_SINGLE_HANDLE_OVERRIDES +
+                 self.REPLAY_FRAME_LOOP_RESOURCE_ALLOCATE_MULTIPLE_HANDLES_OVERRIDES +
+                 self.REPLAY_FRAME_LOOP_RESOURCE_FREE_SINGLE_HANDLE_OVERRIDES +
+                 self.REPLAY_FRAME_LOOP_RESOURCE_ALLOCATE_NOT_FULLY_IMPLEMENTED +
+                 self.REPLAY_FRAME_LOOP_RESOURCE_FREE_NOT_FULLY_IMPLEMENTED +
+                 self.REPLAY_FRAME_LOOP_SKIP_DURING_LOOPING +
+                 self.REPLAY_FRAME_LOOP_IGNORE_FOR_PRESERVED_COMMAND_BUFFERS))
 
     def write_class_setup(self, class_name, constructor_args):
         write(
@@ -57,16 +63,18 @@ class KhronosFrameLoopConsumerBaseHeaderGenerator():
             write('    {}() {{ }}\n'.format(class_name), file=self.outFile)
         write('    virtual ~{}() override {{ }}'.format(class_name), file=self.outFile)
         write('    virtual graphics::FrameLoopInfo& getFrameLoopInfo() = 0;', file=self.outFile)
+        write('    virtual bool ShouldIgnoreRecordingCommand(format::HandleId commandBuffer) const { return false; }', file=self.outFile)
 
     def write_class_completion(self):
+        write('', file=self.outFile)
+        write('    protected:', file=self.outFile)
+        write('        std::set<format::HandleId> allocatedLoopResources;', file=self.outFile)
         write('};', file=self.outFile)
 
     def write_class_contents(self):
         for cmd in self.get_all_filtered_cmd_names():
 
-            if ((cmd not in self.REPLAY_FRAME_LOOP_RESOURCE_ALLOCATE_OVERRIDES) and
-                (cmd not in self.REPLAY_FRAME_LOOP_RESOURCE_FREE_OVERRIDES)
-            ):
+            if self.skip_generating_command(cmd):
                 continue
 
             info = self.all_cmd_params[cmd]

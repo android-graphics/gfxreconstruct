@@ -710,6 +710,7 @@ class VulkanReplayConsumerBase : public VulkanConsumer
                                  const VulkanFenceInfo*                      fence_info);
 
     VkResult OverrideQueueSubmit2(PFN_vkQueueSubmit2                           func,
+                                  uint64_t                                     index,
                                   VkResult                                     original_result,
                                   const VulkanQueueInfo*                       queue_info,
                                   uint32_t                                     submitCount,
@@ -972,6 +973,31 @@ class VulkanReplayConsumerBase : public VulkanConsumer
     void OverrideCmdPipelineBarrier2KHR(PFN_vkCmdPipelineBarrier2                       func,
                                         VulkanCommandBufferInfo*                        command_buffer_info,
                                         StructPointerDecoder<Decoded_VkDependencyInfo>* pDependencyInfo);
+
+    void OverrideCmdWaitEvents(PFN_vkCmdWaitEvents                                        func,
+                               VulkanCommandBufferInfo*                                   command_buffer_info,
+                               uint32_t                                                   eventCount,
+                               HandlePointerDecoder<VkEvent>*                             pEvents,
+                               VkPipelineStageFlags                                       srcStageMask,
+                               VkPipelineStageFlags                                       dstStageMask,
+                               uint32_t                                                   memoryBarrierCount,
+                               const StructPointerDecoder<Decoded_VkMemoryBarrier>*       pMemoryBarriers,
+                               uint32_t                                                   bufferMemoryBarrierCount,
+                               const StructPointerDecoder<Decoded_VkBufferMemoryBarrier>* pBufferMemoryBarriers,
+                               uint32_t                                                   imageMemoryBarrierCount,
+                               const StructPointerDecoder<Decoded_VkImageMemoryBarrier>*  pImageMemoryBarriers);
+
+    void OverrideCmdWaitEvents2(PFN_vkCmdWaitEvents2                                  func,
+                                VulkanCommandBufferInfo*                              command_buffer_info,
+                                uint32_t                                              eventCount,
+                                HandlePointerDecoder<VkEvent>*                        pEvents,
+                                const StructPointerDecoder<Decoded_VkDependencyInfo>* pDependencyInfos);
+
+    void OverrideCmdWaitEvents2KHR(PFN_vkCmdWaitEvents2                                  func,
+                                   VulkanCommandBufferInfo*                              command_buffer_info,
+                                   uint32_t                                              eventCount,
+                                   HandlePointerDecoder<VkEvent>*                        pEvents,
+                                   const StructPointerDecoder<Decoded_VkDependencyInfo>* pDependencyInfos);
 
     VkResult OverrideCreateDescriptorUpdateTemplate(
         PFN_vkCreateDescriptorUpdateTemplate                                      func,
@@ -1392,6 +1418,13 @@ class VulkanReplayConsumerBase : public VulkanConsumer
                                     StructPointerDecoder<Decoded_VkRenderPassBeginInfo>* render_pass_begin_info_decoder,
                                     VkSubpassContents                                    contents);
 
+    std::vector<format::HandleId> GetRenderPassAttachmentImageViewIds(
+        const VulkanFramebufferInfo*                         framebuffer_info,
+        const VulkanRenderPassInfo*                          render_pass_info,
+        StructPointerDecoder<Decoded_VkRenderPassBeginInfo>* render_pass_begin_info_decoder);
+
+    void ApplyRenderPassFinalLayouts(VulkanCommandBufferInfo* command_buffer_info);
+
     void OverrideCmdEndRenderPass(PFN_vkCmdEndRenderPass func, VulkanCommandBufferInfo* command_buffer_info);
 
     void OverrideCmdEndRenderPass2(PFN_vkCmdEndRenderPass2                         func,
@@ -1672,6 +1705,8 @@ class VulkanReplayConsumerBase : public VulkanConsumer
                           StructPointerDecoder<Decoded_VkShaderCreateInfoEXT>* pCreateInfos,
                           StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
                           HandlePointerDecoder<VkShaderEXT>*                   pShaders);
+
+    bool IsShadowSemaphore(VkSemaphore handle) const { return shadow_semaphores_.contains(handle); }
 
     const VulkanReplayOptions& options_;
 
