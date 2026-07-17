@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  ******************************************************************************/
+// clang-format off
 
 #pragma once
 
@@ -873,3 +874,4 @@ typedef int(RENDERDOC_CC *pRENDERDOC_GetAPI)(RENDERDOC_Version version, void **o
 #ifdef __cplusplus
 }    // extern "C"
 #endif
+// clang-format on
