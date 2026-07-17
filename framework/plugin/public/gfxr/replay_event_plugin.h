@@ -39,11 +39,15 @@
 
 typedef enum GfxrReplayEventType
 {
-    GFXR_REPLAY_EVENT_QUEUE_SUBMIT_BEGIN     = 1,
-    GFXR_REPLAY_EVENT_QUEUE_SUBMIT_END       = 2,
-    GFXR_REPLAY_EVENT_FRAME_BEGIN            = 3,
-    GFXR_REPLAY_EVENT_FRAME_END              = 4,
-    GFXR_REPLAY_EVENT_STATE_LOADING_COMPLETE = 5,
+    GFXR_REPLAY_EVENT_QUEUE_SUBMIT_BEGIN = 1,
+    GFXR_REPLAY_EVENT_QUEUE_SUBMIT_END   = 2,
+    GFXR_REPLAY_EVENT_FRAME_BEGIN        = 3,
+    GFXR_REPLAY_EVENT_FRAME_END          = 4,
+
+    // Android Performance Analyzer: Emit "State Loading" events to designate the start of
+    // the first frame when replaying a trimmed .gfxr capture, useful when exporting to RenderDoc.
+    GFXR_REPLAY_EVENT_STATE_LOADING_COMPLETE = 90,
+    // Android Performance Analyzer.
 } GfxrReplayEventType;
 
 static_assert(sizeof(GfxrReplayEventType) == sizeof(uint32_t));
