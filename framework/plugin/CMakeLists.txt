@@ -110,6 +110,7 @@ if(${RUN_TESTS})
     target_sources(${TEST_TARGET_NAME}
         PRIVATE
             ${CMAKE_CURRENT_LIST_DIR}/test/main.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/test/test_renderdoc_replay_plugin.cpp
             ${CMAKE_CURRENT_LIST_DIR}/../../tools/platform_debug_helper.cpp)
     target_link_libraries(${TEST_TARGET_NAME}
         PUBLIC

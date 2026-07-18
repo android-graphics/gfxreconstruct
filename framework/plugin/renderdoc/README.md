@@ -5,4 +5,3 @@ The `renderdoc_app.h` file in this directory is a public header downloaded from 
 
 *   **Source URL**: [https://raw.githubusercontent.com/baldurk/renderdoc/v1.x/renderdoc/api/app/renderdoc_app.h](https://raw.githubusercontent.com/baldurk/renderdoc/v1.x/renderdoc/api/app/renderdoc_app.h)
 *   **Version**: 1.x branch
-*   **SHA256 Checksum**: `b7005e7dc34c3635046868bbd76d81b9b055aede0f56daa0bd39fedee0639ffb`

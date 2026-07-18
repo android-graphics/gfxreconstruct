@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+#if !defined(__ANDROID__) && !defined(GFXR_TEST_BYPASS_ANDROID_CHECK)
+#error "This file must only be included in Android builds."
+#endif
+
 #include <gfxr/replay_event_plugin.h>
 #include <util/logging.h>
 #include <dlfcn.h>
@@ -52,17 +56,20 @@ struct RenderDocCapturePlugin
 /**
  * @brief Dynamically loads the RenderDoc library and retrieves its API entry points.
  *
- * It attempts to load from a custom path if configured. If not, it checks standard libraries
- * like libVkLayer_renderdoc.so, libVkLayer_GLES_RenderDoc.so, and librenderdoc.so.
+ * It attempts to load from a custom path if configured, or falls back to RTLD_DEFAULT
+ * if RenderDoc was already injected globally.
+ *
+ * Upon completion, if the library is successfully loaded, `plugin->rdoc_api` is populated
+ * with the library's function pointers. If the API cannot be loaded, `plugin->rdoc_api`
+ * remains `nullptr` and an error is safely logged.
  *
  * @param plugin Pointer to the plugin state structure.
- * @return true if the RenderDoc API was successfully loaded, false otherwise.
  */
-static bool load_renderdoc_api(RenderDocCapturePlugin* plugin)
+static void load_renderdoc_api(RenderDocCapturePlugin* plugin)
 {
     if (plugin->rdoc_api != nullptr)
     {
-        return true;
+        return;
     }
 
     pRENDERDOC_GetAPI rdoc_get_api = nullptr;
@@ -99,31 +106,7 @@ static bool load_renderdoc_api(RenderDocCapturePlugin* plugin)
         rdoc_get_api = reinterpret_cast<pRENDERDOC_GetAPI>(dlsym(RTLD_DEFAULT, "RENDERDOC_GetAPI"));
     }
 
-    if (rdoc_get_api == nullptr)
-    {
-        // Try opening the default libs
-        void* mod = dlopen("libVkLayer_renderdoc.so", RTLD_NOW);
-        if (mod == nullptr)
-        {
-            mod = dlopen("libVkLayer_GLES_RenderDoc.so", RTLD_NOW);
-        }
-        if (mod == nullptr)
-        {
-            mod = dlopen("librenderdoc.so", RTLD_NOW);
-        }
-        if (mod != nullptr)
-        {
-            rdoc_get_api = reinterpret_cast<pRENDERDOC_GetAPI>(dlsym(mod, "RENDERDOC_GetAPI"));
-            if (rdoc_get_api != nullptr)
-            {
-                plugin->rdoc_lib_handle = mod;
-            }
-            else
-            {
-                dlclose(mod);
-            }
-        }
-    }
+
 
     if (rdoc_get_api != nullptr)
     {
@@ -133,7 +116,7 @@ static bool load_renderdoc_api(RenderDocCapturePlugin* plugin)
             GFXRECON_LOG_INFO("Successfully loaded RenderDoc API on-demand");
             plugin->rdoc_api->SetCaptureFilePathTemplate(
                 "/data/data/com.lunarg.gfxreconstruct.replay/files/gfxrecon_renderdoc_capture");
-            return true;
+            return;
         }
         else
         {
@@ -147,7 +130,19 @@ static bool load_renderdoc_api(RenderDocCapturePlugin* plugin)
         }
     }
 
-    return false;
+    if (plugin->rdoc_api == nullptr)
+    {
+        if (plugin->renderdoc_lib_path.empty())
+        {
+            GFXRECON_LOG_ERROR("Failed to find RenderDoc injected globally, and no custom plugin path was provided! "
+                               "You must provide the path to the RenderDoc library in the plugin arguments if it is "
+                               "not injected by the system.");
+        }
+        else
+        {
+            GFXRECON_LOG_ERROR("Failed to load RenderDoc API from the provided custom path.");
+        }
+    }
 }
 
 /**
@@ -404,6 +399,13 @@ GFXR_REPLAY_PLUGIN_EXPORT GfxrReplayPluginV1* gfxrCreateReplayPluginV1(const Gfx
         GFXRECON_LOG_INFO("RenderDoc plugin configured with custom library path: %s, target_frame: %" PRIu64 "",
                           plugin->renderdoc_lib_path.c_str(),
                           plugin->target_frame);
+    }
+
+    if (plugin->renderdoc_lib_path.empty())
+    {
+        GFXRECON_LOG_FATAL("RenderDoc library path is required but was not provided in plugin parameters.");
+        delete plugin;
+        return nullptr;
     }
 
     return &plugin->base;
