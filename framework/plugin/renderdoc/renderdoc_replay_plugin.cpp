@@ -106,8 +106,6 @@ static void load_renderdoc_api(RenderDocCapturePlugin* plugin)
         rdoc_get_api = reinterpret_cast<pRENDERDOC_GetAPI>(dlsym(RTLD_DEFAULT, "RENDERDOC_GetAPI"));
     }
 
-
-
     if (rdoc_get_api != nullptr)
     {
         int ret = rdoc_get_api(eRENDERDOC_API_Version_1_4_0, reinterpret_cast<void**>(&plugin->rdoc_api));

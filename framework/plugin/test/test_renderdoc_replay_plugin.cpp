@@ -25,21 +25,21 @@
 
 #if defined(__linux__)
 #ifndef __ANDROID__
-    #define GFXR_TEST_BYPASS_ANDROID_CHECK
+#define GFXR_TEST_BYPASS_ANDROID_CHECK
 #endif
 
 // Include the source directly so we can test the unexported struct parser
 #include "../renderdoc/renderdoc_replay_plugin.cpp"
 
 #ifdef GFXR_TEST_BYPASS_ANDROID_CHECK
-    #undef GFXR_TEST_BYPASS_ANDROID_CHECK
+#undef GFXR_TEST_BYPASS_ANDROID_CHECK
 #endif
 
 TEST_CASE("RenderDoc Replay Plugin - Create", "[plugin][renderdoc]")
 {
     GfxrReplayPluginCreateInfo create_info = {};
-    create_info.abi_version = GFXR_REPLAY_PLUGIN_ABI_VERSION;
-    create_info.struct_size = sizeof(GfxrReplayPluginCreateInfo);
+    create_info.abi_version                = GFXR_REPLAY_PLUGIN_ABI_VERSION;
+    create_info.struct_size                = sizeof(GfxrReplayPluginCreateInfo);
 
     // Provide some synthetic parameters
     create_info.plugin_params = "libcustom.so;frame=42";
