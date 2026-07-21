@@ -45,12 +45,9 @@ struct RenderDocCapturePlugin
     bool                 capture_started = false;   ///< True if a frame capture is in progress.
     bool                 capture_done    = false;   ///< True if we have finished at least one capture.
     std::string          renderdoc_lib_path;        ///< Optional custom path to the RenderDoc library.
-    uint64_t target_frame = 0; ///< The 1-based original target frame to capture. A value of 0 is a special fallback
-                               ///< that means capture the first frame.
-    uint64_t first_frame =
-        0; ///< 1-based original frame number. An initial value of 0 indicates it hasn't been detected yet. Defaults to
-           ///< 1 for full traces, or populated from state loading complete for trimmed traces.
-    uint64_t captured_frame_index = 0; ///< The index of the frame currently being captured.
+    uint64_t target_frame = 0; ///< The 1-based relative target frame to capture. A value of 0 is a special fallback
+                               ///< that means capture the first replayed frame.
+    uint64_t captured_frame_index = 0; ///< The 0-based event->frame_index of the frame currently being captured.
 };
 
 /**
@@ -236,8 +233,6 @@ static GfxrReplayPluginResult on_event(GfxrReplayPluginV1* self, const GfxrRepla
         case GFXR_REPLAY_EVENT_STATE_LOADING_COMPLETE:
         {
             // The presence of this event confirms we are playing a trimmed trace.
-            const auto* state_complete = reinterpret_cast<const GfxrReplayStateLoadingCompleteEvent*>(event);
-            plugin->first_frame        = state_complete->frame_number;
 
             // If a capture was started at FRAME_BEGIN, it was done under the assumption
             // that this might be an untrimmed trace. Since we just received STATE_LOADING_COMPLETE,
@@ -251,8 +246,9 @@ static GfxrReplayPluginResult on_event(GfxrReplayPluginV1* self, const GfxrRepla
 
             // For the first replayed frame of a trimmed trace, if we want to capture it,
             // we must start capturing immediately after state loading completes, to exclude
-            // the state setup work.
-            if (plugin->target_frame == plugin->first_frame || plugin->target_frame == 0)
+            // the state setup work. We expect target_frame to be a 1-based relative index,
+            // so event->frame_index + 1 gives us the current relative playback frame (1, 2, ...).
+            if (plugin->target_frame == 0 || plugin->target_frame == (event->frame_index + 1))
             {
                 ensure_api_loaded_and_start_capture(plugin, event->type, event->frame_index);
                 if (plugin->capture_started)
@@ -264,15 +260,6 @@ static GfxrReplayPluginResult on_event(GfxrReplayPluginV1* self, const GfxrRepla
         }
         case GFXR_REPLAY_EVENT_FRAME_BEGIN:
         {
-            if (plugin->first_frame == 0)
-            {
-                // Speculatively assume this is a full trace starting at original frame 1.
-                // If it is a trimmed trace, this will be overwritten when GFXR_REPLAY_EVENT_STATE_LOADING_COMPLETE
-                // fires.
-                plugin->first_frame = 1;
-            }
-
-            uint64_t current_original_frame = event->frame_index + plugin->first_frame;
             // If target_frame is 0 (capture first frame), we start the capture speculatively on the
             // first replayed frame because:
             // 1) For a full trace, we must start it now (at FRAME_BEGIN) or we will miss the setup.
@@ -281,7 +268,8 @@ static GfxrReplayPluginResult on_event(GfxrReplayPluginV1* self, const GfxrRepla
             bool is_speculative_first_replayed_frame_capture_for_full_trace =
                 (plugin->target_frame == 0 && event->frame_index == 0);
 
-            if ((plugin->target_frame != 0 && current_original_frame == plugin->target_frame) ||
+            // Using relative frame indexing: event->frame_index + 1 is the relative 1-based replayed frame.
+            if ((plugin->target_frame != 0 && plugin->target_frame == (event->frame_index + 1)) ||
                 is_speculative_first_replayed_frame_capture_for_full_trace)
             {
                 ensure_api_loaded_and_start_capture(plugin, event->type, event->frame_index);
