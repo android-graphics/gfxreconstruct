@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 34
+    compileSdkVersion 36
     namespace = 'com.lunarg.gfxreconstruct.replay'
-    ndkVersion = '26.3.11579264'
+    ndkVersion = '28.2.13676358'
     defaultConfig {
         applicationId "com.lunarg.gfxreconstruct.replay"
         minSdkVersion 26
-        targetSdkVersion 33
+        targetSdkVersion 36
         versionCode 1
         versionName "1.0"
         ndk {
