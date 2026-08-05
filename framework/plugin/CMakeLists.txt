@@ -87,7 +87,7 @@ if(NOT ANDROID)
     common_build_directives(${BENCHMARK_TARGET_NAME})
 endif()
 
-if(ANDROID AND (CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "arm"))
+if(ANDROID)
     # RenderDoc plugin
     set(RDC_TARGET_NAME gfxrecon_renderdoc_replay_plugin)
     add_library(${RDC_TARGET_NAME}
