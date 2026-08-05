@@ -270,6 +270,8 @@ jobs:
         path: ./release_url
 
   publish:
+    permissions:
+      contents: write
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
     needs: release
