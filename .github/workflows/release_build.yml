@@ -354,4 +354,4 @@ jobs:
         TAG_NAME: ${{ steps.get_tag_name.outputs.tag_name }}
         SUFFIX: ${{ matrix.config.suffix }}
       run: |
-        gh release upload "${TAG_NAME}" "./gfxreconstruct-${TAG_NAME}-${SUFFIX}" --clobber
+        gh release upload "${TAG_NAME}" "./gfxreconstruct-${TAG_NAME}-${SUFFIX}" --repo "${GITHUB_REPOSITORY}" --clobber
