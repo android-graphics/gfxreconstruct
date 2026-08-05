@@ -198,7 +198,7 @@ jobs:
         then
           sh gradlew assembleRelease -Parm64-v8a
         else
-          sh gradlew assembleDebug -Parm64-v8a
+          sh gradlew assembleDebug
         fi
     - name: Prepare artifacts
       run: |
