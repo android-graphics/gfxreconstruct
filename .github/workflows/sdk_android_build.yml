@@ -92,17 +92,16 @@ jobs:
       run: |
         cat << MESSAGE > release_message.txt
 Android binaries to compliment the desktop binaries distributed with the Vulkan ${SDK_VERSION} SDK.
+
+Build Info:
+- Android SDK Version: 27 (Android 8.1)
+- Android NDK Version: 21.3.6528147 (r21d)
 MESSAGE
         gh release create "${REF_NAME}" \
           --title "Android binaries for ${SDK_VERSION} SDK release" \
           --notes-file release_message.txt \
           || echo "Release might already exist"
 
-          Build Info:
-          - Android SDK Version: 27 (Android 8.1)
-          - Android NDK Version: 21.3.6528147 (r21d)
-        draft: false
-        prerelease: false
     - name: Get release URL
       env:
         UPLOAD_URL: ${{ steps.create_release.outputs.upload_url }}
