@@ -107,12 +107,22 @@ inline void InitializeState<VkPhysicalDevice, vulkan_wrappers::DeviceWrapper, Vk
     assert(wrapper != nullptr);
     assert(create_parameters != nullptr);
 
-    GFXRECON_UNREFERENCED_PARAMETER(create_info);
+    assert(create_info != nullptr);
 
     wrapper->create_call_id    = create_call_id;
     wrapper->create_parameters = std::move(create_parameters);
 
     wrapper->physical_device = vulkan_wrappers::GetWrapper<vulkan_wrappers::PhysicalDeviceWrapper>(parent_handle);
+
+    wrapper->queue_family_indices.clear();
+    if ((create_info != nullptr) && (create_info->pQueueCreateInfos != nullptr))
+    {
+        wrapper->queue_family_indices.reserve(create_info->queueCreateInfoCount);
+        for (uint32_t q = 0; q < create_info->queueCreateInfoCount; ++q)
+        {
+            wrapper->queue_family_indices.push_back(create_info->pQueueCreateInfos[q].queueFamilyIndex);
+        }
+    }
 }
 
 template <>

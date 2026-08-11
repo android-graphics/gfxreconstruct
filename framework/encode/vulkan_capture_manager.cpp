@@ -2239,12 +2239,18 @@ void VulkanCaptureManager::ProcessImportFdForBuffer(VkDevice device, VkBuffer bu
                                                 device_wrapper->property_feature_info,
                                                 device_wrapper->physical_device->memory_properties);
 
+    vulkan_wrappers::RegisterDeviceQueues(resource_util, device_wrapper);
+
     VkResult result = resource_util.CreateStagingBuffer(buffer_wrapper->size);
     if (result == VK_SUCCESS)
     {
         std::vector<uint8_t> data;
         result = resource_util.ReadFromBufferResource(
-            buffer, buffer_wrapper->size, memoryOffset, buffer_wrapper->queue_family_index, data);
+            buffer,
+            buffer_wrapper->size,
+            memoryOffset,
+            vulkan_wrappers::GetValidQueueFamilyIndex(device_wrapper, buffer_wrapper->queue_family_index),
+            data);
         if (result == VK_SUCCESS)
         {
             WriteBeginResourceInitCmd(device_wrapper->handle_id, buffer_wrapper->size, buffer_wrapper->size);
@@ -2272,6 +2278,8 @@ void VulkanCaptureManager::ProcessImportFdForImage(VkDevice device, VkImage imag
                                                 *device_wrapper->physical_device->layer_table_ref,
                                                 device_wrapper->property_feature_info,
                                                 device_wrapper->physical_device->memory_properties);
+
+    vulkan_wrappers::RegisterDeviceQueues(resource_util, device_wrapper);
 
     std::vector<VkImageAspectFlagBits> aspects;
     graphics::GetFormatAspects(image_wrapper->format, &aspects);
@@ -2316,7 +2324,8 @@ void VulkanCaptureManager::ProcessImportFdForImage(VkDevice device, VkImage imag
         image_resource.tiling             = image_wrapper->tiling;
         image_resource.sample_count       = image_wrapper->samples;
         image_resource.layout             = image_wrapper->current_layout;
-        image_resource.queue_family_index = image_wrapper->queue_family_index;
+        image_resource.queue_family_index =
+            vulkan_wrappers::GetValidQueueFamilyIndex(device_wrapper, image_wrapper->queue_family_index);
         image_resource.external_format    = image_wrapper->external_format;
         image_resource.size               = image_wrapper->size;
         image_resource.aspect             = aspect;

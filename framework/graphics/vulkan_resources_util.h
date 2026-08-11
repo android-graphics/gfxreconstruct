@@ -52,6 +52,17 @@ class VulkanResourcesUtil
 
     ~VulkanResourcesUtil();
 
+    /**
+     * @brief Registers an existing VkQueue handle for a specified queue family index.
+     *
+     * When set, GetQueue will prefer using registered queues instead of querying vkGetDeviceQueue,
+     * avoiding redundant driver/loader calls and potential issues during state snapshotting or replay.
+     *
+     * @param queue_family_index The Vulkan queue family index associated with the queue.
+     * @param queue The active VkQueue handle to use for commands on this queue family.
+     */
+    void SetQueue(uint32_t queue_family_index, VkQueue queue);
+
     // This function creates a staging buffer that will be used by the ReadFromImageResourceStaging() and
     // ReadFromBufferResource() functions. It is not necessary to do so but can be useful when dumping multiple
     // resource and the size of the biggest staging buffer necessary is known in advance.
@@ -374,6 +385,7 @@ class VulkanResourcesUtil
 
     // map queue-family index -> command-pool/buffer
     std::unordered_map<uint32_t, command_assets_t> command_asset_map_;
+    std::unordered_map<uint32_t, VkQueue>          queue_map_;
     StagingBufferContext                           staging_buffer_;
 
     PFN_vkSetDebugUtilsObjectNameEXT set_debug_utils_object_name_fn_ = nullptr;

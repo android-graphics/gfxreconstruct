@@ -49,8 +49,6 @@
 GFXRECON_BEGIN_NAMESPACE(gfxrecon)
 GFXRECON_BEGIN_NAMESPACE(encode)
 
-const uint32_t kDefaultQueueFamilyIndex = 0;
-
 static bool IsMemoryCoherent(VkMemoryPropertyFlags property_flags)
 {
     return ((property_flags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) == VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
@@ -2312,7 +2310,8 @@ void VulkanStateWriter::ProcessBufferMemory(const vulkan_wrappers::DeviceWrapper
         buffer_resource.buffer             = buffer_wrapper->handle;
         buffer_resource.size               = buffer_wrapper->size;
         buffer_resource.offset             = 0;
-        buffer_resource.queue_family_index = buffer_wrapper->queue_family_index;
+        buffer_resource.queue_family_index =
+            vulkan_wrappers::GetValidQueueFamilyIndex(device_wrapper, buffer_wrapper->queue_family_index);
 
         if (snapshot_entry.need_staging_copy)
         {
@@ -2439,7 +2438,8 @@ void VulkanStateWriter::ProcessBufferMemoryWithAssetFile(const vulkan_wrappers::
             buffer_resource.buffer             = buffer_wrapper->handle;
             buffer_resource.size               = buffer_wrapper->size;
             buffer_resource.offset             = 0;
-            buffer_resource.queue_family_index = buffer_wrapper->queue_family_index;
+            buffer_resource.queue_family_index =
+                vulkan_wrappers::GetValidQueueFamilyIndex(device_wrapper, buffer_wrapper->queue_family_index);
 
             if (snapshot_entry.need_staging_copy)
             {
@@ -2570,7 +2570,8 @@ void VulkanStateWriter::ProcessImageMemory(const vulkan_wrappers::DeviceWrapper*
         image_resource.tiling             = image_wrapper->tiling;
         image_resource.sample_count       = image_wrapper->samples;
         image_resource.layout             = image_wrapper->current_layout;
-        image_resource.queue_family_index = image_wrapper->queue_family_index;
+        image_resource.queue_family_index =
+            vulkan_wrappers::GetValidQueueFamilyIndex(device_wrapper, image_wrapper->queue_family_index);
         image_resource.external_format    = image_wrapper->external_format;
         image_resource.size               = image_wrapper->size;
         image_resource.resource_size      = snapshot_entry.resource_size;
@@ -2750,7 +2751,8 @@ void VulkanStateWriter::ProcessImageMemoryWithAssetFile(const vulkan_wrappers::D
             image_resource.tiling                                       = image_wrapper->tiling;
             image_resource.sample_count                                 = image_wrapper->samples;
             image_resource.layout                                       = image_wrapper->current_layout;
-            image_resource.queue_family_index                           = image_wrapper->queue_family_index;
+            image_resource.queue_family_index =
+                vulkan_wrappers::GetValidQueueFamilyIndex(device_wrapper, image_wrapper->queue_family_index);
             image_resource.size                                         = image_wrapper->size;
             image_resource.resource_size                                = snapshot_entry.resource_size;
             image_resource.level_sizes                                  = &snapshot_entry.level_sizes;
@@ -2895,7 +2897,8 @@ void VulkanStateWriter::WriteBufferMemoryState(const VulkanStateTable& state_tab
 
                 // Group buffers with memory bindings by device for memory snapshot.
                 ResourceSnapshotQueueFamilyTable& snapshot_table = (*resources)[device_wrapper];
-                ResourceSnapshotInfo&             snapshot_entry = snapshot_table[wrapper->queue_family_index];
+                ResourceSnapshotInfo& snapshot_entry = snapshot_table[vulkan_wrappers::GetValidQueueFamilyIndex(
+                    device_wrapper, wrapper->queue_family_index)];
 
                 BufferSnapshotInfo snapshot_info;
                 snapshot_info.buffer_wrapper    = wrapper;
@@ -3003,7 +3006,8 @@ void VulkanStateWriter::WriteBufferMemoryState(const VulkanStateTable& state_tab
 
             // Group buffers with memory bindings by device for memory snapshot.
             ResourceSnapshotQueueFamilyTable& snapshot_table = (*resources)[device_wrapper];
-            ResourceSnapshotInfo&             snapshot_entry = snapshot_table[wrapper->queue_family_index];
+            ResourceSnapshotInfo&             snapshot_entry =
+                snapshot_table[vulkan_wrappers::GetValidQueueFamilyIndex(device_wrapper, wrapper->queue_family_index)];
 
             BufferSnapshotInfo snapshot_info;
             snapshot_info.buffer_wrapper = wrapper;
@@ -3199,13 +3203,16 @@ void VulkanStateWriter::WriteImageMemoryState(const VulkanStateTable& state_tabl
             {
                 // Group images with memory bindings by device for memory snapshot.
                 ResourceSnapshotQueueFamilyTable& snapshot_table = (*resources)[device_wrapper];
-                ResourceSnapshotInfo&             snapshot_entry = snapshot_table[wrapper->queue_family_index];
-                graphics::VulkanResourcesUtil     resource_util(device_wrapper->handle,
+                ResourceSnapshotInfo&         snapshot_entry = snapshot_table[vulkan_wrappers::GetValidQueueFamilyIndex(
+                    device_wrapper, wrapper->queue_family_index)];
+                graphics::VulkanResourcesUtil resource_util(device_wrapper->handle,
                                                             device_wrapper->physical_device->handle,
                                                             device_wrapper->layer_table,
                                                             *device_wrapper->physical_device->layer_table_ref,
                                                             device_wrapper->property_feature_info,
                                                             device_wrapper->physical_device->memory_properties);
+
+                vulkan_wrappers::RegisterDeviceQueues(resource_util, device_wrapper);
 
                 // Sparse images require staging copy for the following process because dumping image data with mapping
                 // memory needs binding the entire image to a single memory range. Sparse image opaque binding allows
@@ -3348,6 +3355,8 @@ void VulkanStateWriter::WriteResourceMemoryState(const VulkanStateTable& state_t
                                                     *device_wrapper->physical_device->layer_table_ref,
                                                     device_wrapper->property_feature_info,
                                                     device_wrapper->physical_device->memory_properties);
+
+        vulkan_wrappers::RegisterDeviceQueues(resource_util, device_wrapper);
 
         if (max_staging_copy_size > 0)
         {
@@ -4021,7 +4030,7 @@ void VulkanStateWriter::WriteQueryPoolReset(
 {
     // Retrieve a queue and create a command buffer for query pool reset.
     WriteCommandProcessingCreateCommands(device_id,
-                                         kDefaultQueueFamilyIndex,
+                                         vulkan_wrappers::kDefaultQueueFamilyIndex,
                                          vulkan_wrappers::kTempQueueId,
                                          vulkan_wrappers::kTempCommandPool,
                                          vulkan_wrappers::kTempCommandBufferId);
