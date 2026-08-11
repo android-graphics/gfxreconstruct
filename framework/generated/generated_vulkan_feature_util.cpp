@@ -28,6 +28,7 @@
 */
 
 #include "graphics/vulkan_feature_util.h"
+#include "graphics/vulkan_struct_get_pnext.h"
 
 #include "util/logging.h"
 
@@ -6373,6 +6374,1406 @@ void CheckUnsupportedFeatures(VkPhysicalDevice physicalDevice,
     if (!remove_unsupported && found_unsupported)
     {
         GFXRECON_LOG_WARNING("Unsupported features were requested. This might cause vkCreateDevice to fail. Try \"--remove-unsupported\" option to remove those features at replay.");
+    }
+}
+
+void FilterPNextFeatures(VkDeviceCreateInfo* createInfo,
+                         const std::vector<const char*>& enabled_extensions)
+{
+    if (createInfo == nullptr) return;
+
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_performance_query"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePerformanceQueryFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePerformanceQueryFeaturesKHR from pNext because VK_KHR_performance_query is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_shader_bfloat16"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderBfloat16FeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderBfloat16FeaturesKHR from pNext because VK_KHR_shader_bfloat16 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_portability_subset"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePortabilitySubsetFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePortabilitySubsetFeaturesKHR from pNext because VK_KHR_portability_subset is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_shader_clock"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderClockFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderClockFeaturesKHR from pNext because VK_KHR_shader_clock is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_fragment_shading_rate"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceFragmentShadingRateFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceFragmentShadingRateFeaturesKHR from pNext because VK_KHR_fragment_shading_rate is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_shader_constant_data"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderConstantDataFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderConstantDataFeaturesKHR from pNext because VK_KHR_shader_constant_data is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_shader_abort"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderAbortFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderAbortFeaturesKHR from pNext because VK_KHR_shader_abort is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_shader_quad_control"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderQuadControlFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderQuadControlFeaturesKHR from pNext because VK_KHR_shader_quad_control is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_present_wait"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePresentWaitFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePresentWaitFeaturesKHR from pNext because VK_KHR_present_wait is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_pipeline_executable_properties"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR from pNext because VK_KHR_pipeline_executable_properties is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_present_id"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePresentIdFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePresentIdFeaturesKHR from pNext because VK_KHR_present_id is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_device_address_commands"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR from pNext because VK_KHR_device_address_commands is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_fragment_shader_barycentric"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR from pNext because VK_KHR_fragment_shader_barycentric is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_shader_subgroup_uniform_control_flow"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR from pNext because VK_KHR_shader_subgroup_uniform_control_flow is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_workgroup_memory_explicit_layout"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR from pNext because VK_KHR_workgroup_memory_explicit_layout is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_ray_tracing_maintenance1"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR from pNext because VK_KHR_ray_tracing_maintenance1 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_shader_untyped_pointers"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderUntypedPointersFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderUntypedPointersFeaturesKHR from pNext because VK_KHR_shader_untyped_pointers is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_shader_maximal_reconvergence"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR from pNext because VK_KHR_shader_maximal_reconvergence is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_present_id2"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePresentId2FeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePresentId2FeaturesKHR from pNext because VK_KHR_present_id2 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_present_wait2"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePresentWait2FeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePresentWait2FeaturesKHR from pNext because VK_KHR_present_wait2 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_ray_tracing_position_fetch"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR from pNext because VK_KHR_ray_tracing_position_fetch is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_pipeline_binary"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePipelineBinaryFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePipelineBinaryFeaturesKHR from pNext because VK_KHR_pipeline_binary is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_swapchain_maintenance1"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR from pNext because VK_KHR_swapchain_maintenance1 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_internally_synchronized_queues"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR from pNext because VK_KHR_internally_synchronized_queues is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_cooperative_matrix"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceCooperativeMatrixFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceCooperativeMatrixFeaturesKHR from pNext because VK_KHR_cooperative_matrix is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_compute_shader_derivatives"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR from pNext because VK_KHR_compute_shader_derivatives is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_video_encode_av1"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceVideoEncodeAV1FeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceVideoEncodeAV1FeaturesKHR from pNext because VK_KHR_video_encode_av1 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_video_decode_vp9"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceVideoDecodeVP9FeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceVideoDecodeVP9FeaturesKHR from pNext because VK_KHR_video_decode_vp9 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_video_maintenance1"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceVideoMaintenance1FeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceVideoMaintenance1FeaturesKHR from pNext because VK_KHR_video_maintenance1 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_unified_image_layouts"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR from pNext because VK_KHR_unified_image_layouts is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_copy_memory_indirect"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR from pNext because VK_KHR_copy_memory_indirect is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_video_encode_intra_refresh"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR from pNext because VK_KHR_video_encode_intra_refresh is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_video_encode_quantization_map"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR from pNext because VK_KHR_video_encode_quantization_map is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_shader_relaxed_extended_instruction"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR from pNext because VK_KHR_shader_relaxed_extended_instruction is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_maintenance7"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceMaintenance7FeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceMaintenance7FeaturesKHR from pNext because VK_KHR_maintenance7 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_device_fault"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceFaultFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceFaultFeaturesKHR from pNext because VK_KHR_device_fault is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_maintenance8"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceMaintenance8FeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceMaintenance8FeaturesKHR from pNext because VK_KHR_maintenance8 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_shader_fma"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderFmaFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderFmaFeaturesKHR from pNext because VK_KHR_shader_fma is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_maintenance9"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceMaintenance9FeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceMaintenance9FeaturesKHR from pNext because VK_KHR_maintenance9 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_depth_clamp_zero_one"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceDepthClampZeroOneFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceDepthClampZeroOneFeaturesKHR from pNext because VK_KHR_depth_clamp_zero_one is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_robustness2"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceRobustness2FeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceRobustness2FeaturesKHR from pNext because VK_KHR_robustness2 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_present_mode_fifo_latest_ready"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR from pNext because VK_KHR_present_mode_fifo_latest_ready is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_maintenance10"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceMaintenance10FeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceMaintenance10FeaturesKHR from pNext because VK_KHR_maintenance10 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_maintenance11"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceMaintenance11FeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceMaintenance11FeaturesKHR from pNext because VK_KHR_maintenance11 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_transform_feedback"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceTransformFeedbackFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceTransformFeedbackFeaturesEXT from pNext because VK_EXT_transform_feedback is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_corner_sampled_image"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceCornerSampledImageFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceCornerSampledImageFeaturesNV from pNext because VK_NV_corner_sampled_image is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_astc_decode_mode"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceASTCDecodeFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceASTCDecodeFeaturesEXT from pNext because VK_EXT_astc_decode_mode is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_conditional_rendering"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceConditionalRenderingFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceConditionalRenderingFeaturesEXT from pNext because VK_EXT_conditional_rendering is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_depth_clip_enable"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceDepthClipEnableFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceDepthClipEnableFeaturesEXT from pNext because VK_EXT_depth_clip_enable is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_IMG_relaxed_line_rasterization"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG from pNext because VK_IMG_relaxed_line_rasterization is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_blend_operation_advanced"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT from pNext because VK_EXT_blend_operation_advanced is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_shader_sm_builtins"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderSMBuiltinsFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderSMBuiltinsFeaturesNV from pNext because VK_NV_shader_sm_builtins is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_shading_rate_image"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShadingRateImageFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShadingRateImageFeaturesNV from pNext because VK_NV_shading_rate_image is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_representative_fragment_test"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV from pNext because VK_NV_representative_fragment_test is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_QCOM_cooperative_matrix_conversion"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM from pNext because VK_QCOM_cooperative_matrix_conversion is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_mesh_shader"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceMeshShaderFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceMeshShaderFeaturesNV from pNext because VK_NV_mesh_shader is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_shader_image_footprint"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderImageFootprintFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderImageFootprintFeaturesNV from pNext because VK_NV_shader_image_footprint is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_scissor_exclusive"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceExclusiveScissorFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceExclusiveScissorFeaturesNV from pNext because VK_NV_scissor_exclusive is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_present_timing"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePresentTimingFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePresentTimingFeaturesEXT from pNext because VK_EXT_present_timing is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_INTEL_shader_integer_functions2"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL from pNext because VK_INTEL_shader_integer_functions2 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_fragment_density_map"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceFragmentDensityMapFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceFragmentDensityMapFeaturesEXT from pNext because VK_EXT_fragment_density_map is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_AMD_device_coherent_memory"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceCoherentMemoryFeaturesAMD>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceCoherentMemoryFeaturesAMD from pNext because VK_AMD_device_coherent_memory is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_shader_image_atomic_int64"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT from pNext because VK_EXT_shader_image_atomic_int64 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_memory_priority"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceMemoryPriorityFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceMemoryPriorityFeaturesEXT from pNext because VK_EXT_memory_priority is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_dedicated_allocation_image_aliasing"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV from pNext because VK_NV_dedicated_allocation_image_aliasing is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_buffer_device_address"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceBufferDeviceAddressFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceBufferDeviceAddressFeaturesEXT from pNext because VK_EXT_buffer_device_address is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_cooperative_matrix"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceCooperativeMatrixFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceCooperativeMatrixFeaturesNV from pNext because VK_NV_cooperative_matrix is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_coverage_reduction_mode"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceCoverageReductionModeFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceCoverageReductionModeFeaturesNV from pNext because VK_NV_coverage_reduction_mode is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_fragment_shader_interlock"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT from pNext because VK_EXT_fragment_shader_interlock is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_ycbcr_image_arrays"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceYcbcrImageArraysFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceYcbcrImageArraysFeaturesEXT from pNext because VK_EXT_ycbcr_image_arrays is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_provoking_vertex"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceProvokingVertexFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceProvokingVertexFeaturesEXT from pNext because VK_EXT_provoking_vertex is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_shader_atomic_float"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderAtomicFloatFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderAtomicFloatFeaturesEXT from pNext because VK_EXT_shader_atomic_float is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_extended_dynamic_state"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceExtendedDynamicStateFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceExtendedDynamicStateFeaturesEXT from pNext because VK_EXT_extended_dynamic_state is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_map_memory_placed"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceMapMemoryPlacedFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceMapMemoryPlacedFeaturesEXT from pNext because VK_EXT_map_memory_placed is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_shader_atomic_float2"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT from pNext because VK_EXT_shader_atomic_float2 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_device_generated_commands"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV from pNext because VK_NV_device_generated_commands is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_inherited_viewport_scissor"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceInheritedViewportScissorFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceInheritedViewportScissorFeaturesNV from pNext because VK_NV_inherited_viewport_scissor is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_texel_buffer_alignment"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT from pNext because VK_EXT_texel_buffer_alignment is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_depth_bias_control"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceDepthBiasControlFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceDepthBiasControlFeaturesEXT from pNext because VK_EXT_depth_bias_control is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_device_memory_report"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceDeviceMemoryReportFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceDeviceMemoryReportFeaturesEXT from pNext because VK_EXT_device_memory_report is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_custom_border_color"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceCustomBorderColorFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceCustomBorderColorFeaturesEXT from pNext because VK_EXT_custom_border_color is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_texture_compression_astc_3d"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT from pNext because VK_EXT_texture_compression_astc_3d is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_present_barrier"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePresentBarrierFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePresentBarrierFeaturesNV from pNext because VK_NV_present_barrier is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_device_diagnostics_config"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceDiagnosticsConfigFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceDiagnosticsConfigFeaturesNV from pNext because VK_NV_device_diagnostics_config is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_QCOM_queue_perf_hint"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceQueuePerfHintFeaturesQCOM>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceQueuePerfHintFeaturesQCOM from pNext because VK_QCOM_queue_perf_hint is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_QCOM_tile_shading"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceTileShadingFeaturesQCOM>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceTileShadingFeaturesQCOM from pNext because VK_QCOM_tile_shading is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_descriptor_buffer"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceDescriptorBufferFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceDescriptorBufferFeaturesEXT from pNext because VK_EXT_descriptor_buffer is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_graphics_pipeline_library"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT from pNext because VK_EXT_graphics_pipeline_library is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_AMD_shader_early_and_late_fragment_tests"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD from pNext because VK_AMD_shader_early_and_late_fragment_tests is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_fragment_shading_rate_enums"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV from pNext because VK_NV_fragment_shading_rate_enums is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_ray_tracing_motion_blur"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceRayTracingMotionBlurFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceRayTracingMotionBlurFeaturesNV from pNext because VK_NV_ray_tracing_motion_blur is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_ycbcr_2plane_444_formats"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT from pNext because VK_EXT_ycbcr_2plane_444_formats is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_fragment_density_map2"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceFragmentDensityMap2FeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceFragmentDensityMap2FeaturesEXT from pNext because VK_EXT_fragment_density_map2 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_image_compression_control"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceImageCompressionControlFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceImageCompressionControlFeaturesEXT from pNext because VK_EXT_image_compression_control is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_attachment_feedback_loop_layout"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT from pNext because VK_EXT_attachment_feedback_loop_layout is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_4444_formats"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevice4444FormatsFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevice4444FormatsFeaturesEXT from pNext because VK_EXT_4444_formats is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_device_fault"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceFaultFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceFaultFeaturesEXT from pNext because VK_EXT_device_fault is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_ARM_rasterization_order_attachment_access"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT from pNext because VK_ARM_rasterization_order_attachment_access is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_rgba10x6_formats"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT from pNext because VK_EXT_rgba10x6_formats is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_VALVE_mutable_descriptor_type"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT from pNext because VK_VALVE_mutable_descriptor_type is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_vertex_input_dynamic_state"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT from pNext because VK_EXT_vertex_input_dynamic_state is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_device_address_binding_report"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceAddressBindingReportFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceAddressBindingReportFeaturesEXT from pNext because VK_EXT_device_address_binding_report is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_depth_clip_control"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceDepthClipControlFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceDepthClipControlFeaturesEXT from pNext because VK_EXT_depth_clip_control is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_primitive_topology_list_restart"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT from pNext because VK_EXT_primitive_topology_list_restart is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_HUAWEI_invocation_mask"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceInvocationMaskFeaturesHUAWEI>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceInvocationMaskFeaturesHUAWEI from pNext because VK_HUAWEI_invocation_mask is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_external_memory_rdma"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceExternalMemoryRDMAFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceExternalMemoryRDMAFeaturesNV from pNext because VK_NV_external_memory_rdma is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_frame_boundary"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceFrameBoundaryFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceFrameBoundaryFeaturesEXT from pNext because VK_EXT_frame_boundary is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_multisampled_render_to_single_sampled"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT from pNext because VK_EXT_multisampled_render_to_single_sampled is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_extended_dynamic_state2"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceExtendedDynamicState2FeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceExtendedDynamicState2FeaturesEXT from pNext because VK_EXT_extended_dynamic_state2 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_color_write_enable"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceColorWriteEnableFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceColorWriteEnableFeaturesEXT from pNext because VK_EXT_color_write_enable is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_primitives_generated_query"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT from pNext because VK_EXT_primitives_generated_query is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_VALVE_video_encode_rgb_conversion"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE from pNext because VK_VALVE_video_encode_rgb_conversion is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_image_view_min_lod"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceImageViewMinLodFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceImageViewMinLodFeaturesEXT from pNext because VK_EXT_image_view_min_lod is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_multi_draw"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceMultiDrawFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceMultiDrawFeaturesEXT from pNext because VK_EXT_multi_draw is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_image_2d_view_of_3d"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceImage2DViewOf3DFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceImage2DViewOf3DFeaturesEXT from pNext because VK_EXT_image_2d_view_of_3d is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_shader_tile_image"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderTileImageFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderTileImageFeaturesEXT from pNext because VK_EXT_shader_tile_image is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_opacity_micromap"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceOpacityMicromapFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceOpacityMicromapFeaturesEXT from pNext because VK_EXT_opacity_micromap is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_displacement_micromap"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceDisplacementMicromapFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceDisplacementMicromapFeaturesNV from pNext because VK_NV_displacement_micromap is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_HUAWEI_cluster_culling_shader"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI from pNext because VK_HUAWEI_cluster_culling_shader is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_border_color_swizzle"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceBorderColorSwizzleFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceBorderColorSwizzleFeaturesEXT from pNext because VK_EXT_border_color_swizzle is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_pageable_device_local_memory"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT from pNext because VK_EXT_pageable_device_local_memory is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_ARM_scheduling_controls"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceSchedulingControlsFeaturesARM>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceSchedulingControlsFeaturesARM from pNext because VK_ARM_scheduling_controls is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_image_sliced_view_of_3d"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT from pNext because VK_EXT_image_sliced_view_of_3d is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_VALVE_descriptor_set_host_mapping"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE from pNext because VK_VALVE_descriptor_set_host_mapping is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_non_seamless_cube_map"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT from pNext because VK_EXT_non_seamless_cube_map is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_ARM_render_pass_striped"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceRenderPassStripedFeaturesARM>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceRenderPassStripedFeaturesARM from pNext because VK_ARM_render_pass_striped is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_QCOM_fragment_density_map_offset"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT from pNext because VK_QCOM_fragment_density_map_offset is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_device_generated_commands_compute"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV from pNext because VK_NV_device_generated_commands_compute is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_ray_tracing_linear_swept_spheres"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV from pNext because VK_NV_ray_tracing_linear_swept_spheres is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_linear_color_attachment"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceLinearColorAttachmentFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceLinearColorAttachmentFeaturesNV from pNext because VK_NV_linear_color_attachment is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_image_compression_control_swapchain"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT from pNext because VK_EXT_image_compression_control_swapchain is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_QCOM_image_processing"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceImageProcessingFeaturesQCOM>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceImageProcessingFeaturesQCOM from pNext because VK_QCOM_image_processing is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_nested_command_buffer"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceNestedCommandBufferFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceNestedCommandBufferFeaturesEXT from pNext because VK_EXT_nested_command_buffer is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_extended_dynamic_state3"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceExtendedDynamicState3FeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceExtendedDynamicState3FeaturesEXT from pNext because VK_EXT_extended_dynamic_state3 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_subpass_merge_feedback"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT from pNext because VK_EXT_subpass_merge_feedback is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_shader_module_identifier"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT from pNext because VK_EXT_shader_module_identifier is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_optical_flow"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceOpticalFlowFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceOpticalFlowFeaturesNV from pNext because VK_NV_optical_flow is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_legacy_dithering"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceLegacyDitheringFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceLegacyDitheringFeaturesEXT from pNext because VK_EXT_legacy_dithering is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_ANDROID_external_format_resolve"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceExternalFormatResolveFeaturesANDROID>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceExternalFormatResolveFeaturesANDROID from pNext because VK_ANDROID_external_format_resolve is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_AMD_anti_lag"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceAntiLagFeaturesAMD>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceAntiLagFeaturesAMD from pNext because VK_AMD_anti_lag is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_shader_object"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderObjectFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderObjectFeaturesEXT from pNext because VK_EXT_shader_object is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_QCOM_tile_properties"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceTilePropertiesFeaturesQCOM>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceTilePropertiesFeaturesQCOM from pNext because VK_QCOM_tile_properties is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_SEC_amigo_profiling"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceAmigoProfilingFeaturesSEC>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceAmigoProfilingFeaturesSEC from pNext because VK_SEC_amigo_profiling is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_QCOM_multiview_per_view_viewports"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM from pNext because VK_QCOM_multiview_per_view_viewports is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_ray_tracing_invocation_reorder"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV from pNext because VK_NV_ray_tracing_invocation_reorder is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_cooperative_vector"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceCooperativeVectorFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceCooperativeVectorFeaturesNV from pNext because VK_NV_cooperative_vector is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_extended_sparse_address_space"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV from pNext because VK_NV_extended_sparse_address_space is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_legacy_vertex_attributes"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT from pNext because VK_EXT_legacy_vertex_attributes is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_ARM_shader_core_builtins"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM from pNext because VK_ARM_shader_core_builtins is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_pipeline_library_group_handles"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT from pNext because VK_EXT_pipeline_library_group_handles is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_dynamic_rendering_unused_attachments"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT from pNext because VK_EXT_dynamic_rendering_unused_attachments is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_ARM_data_graph"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceDataGraphFeaturesARM>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceDataGraphFeaturesARM from pNext because VK_ARM_data_graph is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_QCOM_multiview_per_view_render_areas"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM from pNext because VK_QCOM_multiview_per_view_render_areas is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_per_stage_descriptor_set"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePerStageDescriptorSetFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePerStageDescriptorSetFeaturesNV from pNext because VK_NV_per_stage_descriptor_set is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_QCOM_image_processing2"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceImageProcessing2FeaturesQCOM>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceImageProcessing2FeaturesQCOM from pNext because VK_QCOM_image_processing2 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_QCOM_filter_cubic_weights"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceCubicWeightsFeaturesQCOM>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceCubicWeightsFeaturesQCOM from pNext because VK_QCOM_filter_cubic_weights is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_QCOM_ycbcr_degamma"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceYcbcrDegammaFeaturesQCOM>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceYcbcrDegammaFeaturesQCOM from pNext because VK_QCOM_ycbcr_degamma is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_QCOM_filter_cubic_clamp"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceCubicClampFeaturesQCOM>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceCubicClampFeaturesQCOM from pNext because VK_QCOM_filter_cubic_clamp is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_attachment_feedback_loop_dynamic_state"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT from pNext because VK_EXT_attachment_feedback_loop_dynamic_state is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_descriptor_pool_overallocation"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV from pNext because VK_NV_descriptor_pool_overallocation is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_QCOM_tile_memory_heap"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceTileMemoryHeapFeaturesQCOM>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceTileMemoryHeapFeaturesQCOM from pNext because VK_QCOM_tile_memory_heap is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_memory_decompression"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceMemoryDecompressionFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceMemoryDecompressionFeaturesEXT from pNext because VK_EXT_memory_decompression is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_raw_access_chains"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceRawAccessChainsFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceRawAccessChainsFeaturesNV from pNext because VK_NV_raw_access_chains is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_command_buffer_inheritance"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceCommandBufferInheritanceFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceCommandBufferInheritanceFeaturesNV from pNext because VK_NV_command_buffer_inheritance is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_shader_atomic_float16_vector"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV from pNext because VK_NV_shader_atomic_float16_vector is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_shader_replicated_composites"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT from pNext because VK_EXT_shader_replicated_composites is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_shader_float8"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderFloat8FeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderFloat8FeaturesEXT from pNext because VK_EXT_shader_float8 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_ray_tracing_validation"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceRayTracingValidationFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceRayTracingValidationFeaturesNV from pNext because VK_NV_ray_tracing_validation is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_partitioned_acceleration_structure"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV from pNext because VK_NV_partitioned_acceleration_structure is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_device_generated_commands"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT from pNext because VK_EXT_device_generated_commands is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_MESA_image_alignment_control"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceImageAlignmentControlFeaturesMESA>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceImageAlignmentControlFeaturesMESA from pNext because VK_MESA_image_alignment_control is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_push_constant_bank"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePushConstantBankFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePushConstantBankFeaturesNV from pNext because VK_NV_push_constant_bank is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_ray_tracing_invocation_reorder"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceRayTracingInvocationReorderFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceRayTracingInvocationReorderFeaturesEXT from pNext because VK_EXT_ray_tracing_invocation_reorder is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_depth_clamp_control"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceDepthClampControlFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceDepthClampControlFeaturesEXT from pNext because VK_EXT_depth_clamp_control is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_HUAWEI_hdr_vivid"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceHdrVividFeaturesHUAWEI>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceHdrVividFeaturesHUAWEI from pNext because VK_HUAWEI_hdr_vivid is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_cooperative_matrix2"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceCooperativeMatrix2FeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceCooperativeMatrix2FeaturesNV from pNext because VK_NV_cooperative_matrix2 is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_ARM_pipeline_opacity_micromap"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePipelineOpacityMicromapFeaturesARM>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePipelineOpacityMicromapFeaturesARM from pNext because VK_ARM_pipeline_opacity_micromap is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_ARM_performance_counters_by_region"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePerformanceCountersByRegionFeaturesARM>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePerformanceCountersByRegionFeaturesARM from pNext because VK_ARM_performance_counters_by_region is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_vertex_attribute_robustness"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT from pNext because VK_EXT_vertex_attribute_robustness is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_ARM_format_pack"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceFormatPackFeaturesARM>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceFormatPackFeaturesARM from pNext because VK_ARM_format_pack is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_VALVE_fragment_density_map_layered"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE from pNext because VK_VALVE_fragment_density_map_layered is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_present_metering"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePresentMeteringFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePresentMeteringFeaturesNV from pNext because VK_NV_present_metering is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_zero_initialize_device_memory"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT from pNext because VK_EXT_zero_initialize_device_memory is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_shader_64bit_indexing"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShader64BitIndexingFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShader64BitIndexingFeaturesEXT from pNext because VK_EXT_shader_64bit_indexing is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_custom_resolve"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceCustomResolveFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceCustomResolveFeaturesEXT from pNext because VK_EXT_custom_resolve is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_QCOM_data_graph_model"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceDataGraphModelFeaturesQCOM>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceDataGraphModelFeaturesQCOM from pNext because VK_QCOM_data_graph_model is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_shader_long_vector"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderLongVectorFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderLongVectorFeaturesEXT from pNext because VK_EXT_shader_long_vector is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_SEC_pipeline_cache_incremental_mode"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC from pNext because VK_SEC_pipeline_cache_incremental_mode is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_shader_uniform_buffer_unsized_array"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT from pNext because VK_EXT_shader_uniform_buffer_unsized_array is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_NV_compute_occupancy_priority"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV from pNext because VK_NV_compute_occupancy_priority is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_shader_subgroup_partitioned"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT from pNext because VK_EXT_shader_subgroup_partitioned is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_VALVE_shader_mixed_float_dot_product"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE from pNext because VK_VALVE_shader_mixed_float_dot_product is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_SEC_throttle_hint"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceThrottleHintFeaturesSEC>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceThrottleHintFeaturesSEC from pNext because VK_SEC_throttle_hint is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_ARM_data_graph_neural_accelerator_statistics"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM from pNext because VK_ARM_data_graph_neural_accelerator_statistics is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_primitive_restart_index"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT from pNext because VK_EXT_primitive_restart_index is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_acceleration_structure"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceAccelerationStructureFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceAccelerationStructureFeaturesKHR from pNext because VK_KHR_acceleration_structure is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_ray_tracing_pipeline"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceRayTracingPipelineFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceRayTracingPipelineFeaturesKHR from pNext because VK_KHR_ray_tracing_pipeline is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_KHR_ray_query"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceRayQueryFeaturesKHR>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceRayQueryFeaturesKHR from pNext because VK_KHR_ray_query is not enabled.");
+        }
+    }
+    if (!IsSupportedExtension(enabled_extensions, "VK_EXT_mesh_shader"))
+    {
+        if (vulkan_struct_remove_pnext<VkPhysicalDeviceMeshShaderFeaturesEXT>(createInfo) != nullptr)
+        {
+            GFXRECON_LOG_INFO("Removed VkPhysicalDeviceMeshShaderFeaturesEXT from pNext because VK_EXT_mesh_shader is not enabled.");
+        }
     }
 }
 

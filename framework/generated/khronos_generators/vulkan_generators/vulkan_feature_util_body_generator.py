@@ -50,6 +50,7 @@ class VulkanFeatureUtilBodyGeneratorOptions(VulkanBaseGeneratorOptions):
 
         self.begin_end_file_data.specific_headers.extend((
             'graphics/vulkan_feature_util.h',
+            'graphics/vulkan_struct_get_pnext.h',
             '',
             'util/logging.h',
             '',
@@ -108,7 +109,8 @@ class VulkanFeatureUtilBodyGenerator(VulkanBaseGenerator):
                     self.physical_device_features2_stypes[typename] = {
                         'sType':
                         self.make_structure_type_enum(typeinfo, typename),
-                        'members': members
+                        'members': members,
+                        'extension': self.featureName
                     }
 
             #  Get all core 1.0 features
@@ -211,5 +213,23 @@ class VulkanFeatureUtilBodyGenerator(VulkanBaseGenerator):
         result += '    {\n'
         result += '        GFXRECON_LOG_WARNING("Unsupported features were requested. This might cause vkCreateDevice to fail. Try \\"--remove-unsupported\\" option to remove those features at replay.");\n'
         result += '    }\n'
+        result += '}\n\n'
+
+        result += 'void FilterPNextFeatures(VkDeviceCreateInfo* createInfo,\n'
+        result += '                         const std::vector<const char*>& enabled_extensions)\n'
+        result += '{\n'
+        result += '    if (createInfo == nullptr) return;\n\n'
+
+        for typename, info in self.physical_device_features2_stypes.items():
+            ext = info['extension']
+            if ext and not ext.startswith('VK_VERSION_'):
+                result += '    if (!IsSupportedExtension(enabled_extensions, "{}"))\n'.format(ext)
+                result += '    {\n'
+                result += '        if (vulkan_struct_remove_pnext<{}>(createInfo) != nullptr)\n'.format(typename)
+                result += '        {\n'
+                result += '            GFXRECON_LOG_INFO("Removed {} from pNext because {} is not enabled.");\n'.format(typename, ext)
+                result += '        }\n'
+                result += '    }\n'
+
         result += '}'
         return result

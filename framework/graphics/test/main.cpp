@@ -27,6 +27,7 @@
 #include <numeric>
 #include <catch2/catch.hpp>
 
+#include "graphics/vulkan_feature_util.h"
 #include "graphics/vulkan_shader_group_handle.h"
 
 TEST_CASE("vulkan_shader_group_handle - create empty handles", "[]")
@@ -57,4 +58,84 @@ TEST_CASE("vulkan_shader_group_handle - create handles", "[]")
     // check hashing via std::hash
     std::hash<gfxrecon::graphics::shader_group_handle_t> hasher;
     REQUIRE(hasher(one) != hasher(two));
+}
+
+TEST_CASE("FilterPNextFeatures - remove unsupported", "[feature_util]")
+{
+    VkPhysicalDeviceFragmentDensityMapFeaturesEXT fdm_features = {
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT,
+        nullptr
+    };
+
+    VkPhysicalDeviceFragmentShadingRateFeaturesKHR fsr_features = {
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_FEATURES_KHR,
+        nullptr
+    };
+
+    SECTION("Both extensions enabled - nothing removed")
+    {
+        fdm_features.pNext = &fsr_features;
+        fsr_features.pNext = nullptr;
+        VkDeviceCreateInfo create_info = { VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO, &fdm_features };
+
+        std::vector<const char*> enabled = {
+            "VK_EXT_fragment_density_map",
+            "VK_KHR_fragment_shading_rate"
+        };
+
+        gfxrecon::graphics::feature_util::FilterPNextFeatures(&create_info, enabled);
+
+        REQUIRE(create_info.pNext == &fdm_features);
+        REQUIRE(fdm_features.pNext == &fsr_features);
+        REQUIRE(fsr_features.pNext == nullptr);
+    }
+
+    SECTION("One extension disabled - that struct removed")
+    {
+        fdm_features.pNext = &fsr_features;
+        fsr_features.pNext = nullptr;
+        VkDeviceCreateInfo create_info = { VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO, &fdm_features };
+
+        // VK_EXT_fragment_density_map is NOT enabled
+        std::vector<const char*> enabled = {
+            "VK_KHR_fragment_shading_rate"
+        };
+
+        gfxrecon::graphics::feature_util::FilterPNextFeatures(&create_info, enabled);
+
+        // fdm_features should be removed, create_info.pNext should point to fsr_features
+        REQUIRE(create_info.pNext == &fsr_features);
+        REQUIRE(fsr_features.pNext == nullptr);
+    }
+
+    SECTION("Other extension disabled - that struct removed")
+    {
+        fdm_features.pNext = &fsr_features;
+        fsr_features.pNext = nullptr;
+        VkDeviceCreateInfo create_info = { VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO, &fdm_features };
+
+        // VK_KHR_fragment_shading_rate is NOT enabled
+        std::vector<const char*> enabled = {
+            "VK_EXT_fragment_density_map"
+        };
+
+        gfxrecon::graphics::feature_util::FilterPNextFeatures(&create_info, enabled);
+
+        // fsr_features should be removed, fdm_features.pNext should be nullptr
+        REQUIRE(create_info.pNext == &fdm_features);
+        REQUIRE(fdm_features.pNext == nullptr);
+    }
+
+    SECTION("Both extensions disabled - both removed")
+    {
+        fdm_features.pNext = &fsr_features;
+        fsr_features.pNext = nullptr;
+        VkDeviceCreateInfo create_info = { VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO, &fdm_features };
+
+        std::vector<const char*> enabled = {};
+
+        gfxrecon::graphics::feature_util::FilterPNextFeatures(&create_info, enabled);
+
+        REQUIRE(create_info.pNext == nullptr);
+    }
 }
