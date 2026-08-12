@@ -20,6 +20,7 @@
 
 #include <gfxr/replay_event_plugin.h>
 #include <util/logging.h>
+#include <util/file_path.h>
 #include <dlfcn.h>
 #include <string>
 #include <cstdlib>
@@ -109,8 +110,11 @@ static void load_renderdoc_api(RenderDocCapturePlugin* plugin)
         if (ret == 1)
         {
             GFXRECON_LOG_INFO("Successfully loaded RenderDoc API on-demand");
-            plugin->rdoc_api->SetCaptureFilePathTemplate(
-                "/data/data/com.lunarg.gfxreconstruct.replay/files/gfxrecon_renderdoc_capture");
+            gfxrecon::util::filepath::FileInfo info{};
+            gfxrecon::util::filepath::GetApplicationInfo(info);
+            std::string path_template = gfxrecon::util::filepath::ExpandPathVariables(
+                info, "${InternalDataPath}/files/gfxrecon_renderdoc_capture");
+            plugin->rdoc_api->SetCaptureFilePathTemplate(path_template.c_str());
             return;
         }
         else
