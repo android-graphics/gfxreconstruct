@@ -86,8 +86,6 @@ static GfxrReplayPluginResult on_event(GfxrReplayPluginV1* self, const GfxrRepla
         return GFXR_REPLAY_PLUGIN_RESULT_ERROR;
     }
 
-    GFXRECON_LOG_INFO("Received event type %u at timestamp %llu ns", event->type, event->timestamp_ns);
-
     SampleReplayPlugin* plugin        = reinterpret_cast<SampleReplayPlugin*>(self);
     int                 half_sleep_ms = plugin->sleep_around_gpu_frame_ms / 2;
 
