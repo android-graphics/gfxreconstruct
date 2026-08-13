@@ -32,6 +32,7 @@
 #include "generated/generated_vulkan_dispatch_table.h"
 #include "generated/generated_vulkan_state_table.h"
 #include "util/defines.h"
+#include "graphics/vulkan_resources_util.h"
 #include "graphics/vulkan_util.h"
 
 #include <algorithm>
@@ -42,6 +43,70 @@
 GFXRECON_BEGIN_NAMESPACE(gfxrecon)
 GFXRECON_BEGIN_NAMESPACE(encode)
 GFXRECON_BEGIN_NAMESPACE(vulkan_wrappers)
+
+const uint32_t kDefaultQueueFamilyIndex = 0;
+
+inline bool IsSpecialQueueFamilyIndex(uint32_t queue_family_index)
+{
+    return (queue_family_index == VK_QUEUE_FAMILY_IGNORED) || (queue_family_index == VK_QUEUE_FAMILY_EXTERNAL) ||
+           (queue_family_index == VK_QUEUE_FAMILY_FOREIGN_EXT);
+}
+
+/**
+ * @brief Validates a queue family index against the valid queue family indices of a device wrapper.
+ *
+ * If the provided queue_family_index is a special index (e.g. VK_QUEUE_FAMILY_IGNORED, VK_QUEUE_FAMILY_EXTERNAL,
+ * or VK_QUEUE_FAMILY_FOREIGN_EXT) or not present in the device's configured queue family indices, this function
+ * falls back to the device's primary queue family or the default queue family index (0).
+ *
+ * @param device_wrapper The device wrapper containing valid queue family indices from device creation.
+ * @param queue_family_index The queue family index to validate.
+ * @return A valid queue family index that belongs to the device.
+ */
+inline uint32_t GetValidQueueFamilyIndex(const DeviceWrapper* device_wrapper, uint32_t queue_family_index)
+{
+    if ((device_wrapper != nullptr) && !device_wrapper->queue_family_indices.empty())
+    {
+        if (!IsSpecialQueueFamilyIndex(queue_family_index))
+        {
+            const auto& indices = device_wrapper->queue_family_indices;
+            if (std::find(indices.begin(), indices.end(), queue_family_index) != indices.end())
+            {
+                return queue_family_index;
+            }
+        }
+        return device_wrapper->queue_family_indices.front();
+    }
+    return !IsSpecialQueueFamilyIndex(queue_family_index) ? queue_family_index : kDefaultQueueFamilyIndex;
+}
+
+/**
+ * @brief Registers active child queues from a DeviceWrapper into a VulkanResourcesUtil instance.
+ *
+ * @param resource_util The resource utility instance to configure.
+ * @param device_wrapper The device wrapper holding active child queues.
+ */
+inline void RegisterDeviceQueues(graphics::VulkanResourcesUtil& resource_util, const DeviceWrapper* device_wrapper)
+{
+    if (device_wrapper == nullptr)
+    {
+        return;
+    }
+
+    for (size_t i = 0; i < device_wrapper->child_queues.size(); ++i)
+    {
+        const auto* queue_wrapper = device_wrapper->child_queues[i];
+        if ((queue_wrapper != nullptr) && (queue_wrapper->handle != VK_NULL_HANDLE))
+        {
+            uint32_t qfi =
+                (i < device_wrapper->queue_family_indices.size())
+                    ? device_wrapper->queue_family_indices[i]
+                    : ((!device_wrapper->queue_family_indices.empty()) ? device_wrapper->queue_family_indices.front()
+                                                                       : kDefaultQueueFamilyIndex);
+            resource_util.SetQueue(qfi, queue_wrapper->handle);
+        }
+    }
+}
 
 // Temporary resource IDs for state processing.
 static const format::HandleId kTempQueueId = std::numeric_limits<format::HandleId>::max() - 1;

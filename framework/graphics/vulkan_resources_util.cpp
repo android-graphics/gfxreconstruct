@@ -1506,19 +1506,38 @@ void VulkanResourcesUtil::CopyBuffer(VkCommandBuffer command_buffer,
                                      nullptr);
 }
 
+void VulkanResourcesUtil::SetQueue(uint32_t queue_family_index, VkQueue queue)
+{
+    if (queue != VK_NULL_HANDLE)
+    {
+        queue_map_[queue_family_index] = queue;
+    }
+}
+
 VkQueue VulkanResourcesUtil::GetQueue(uint32_t queue_family_index, uint32_t queue_index)
 {
+    auto it = queue_map_.find(queue_family_index);
+    if (it != queue_map_.end() && it->second != VK_NULL_HANDLE)
+    {
+        return it->second;
+    }
+
     VkQueue queue = VK_NULL_HANDLE;
-    device_table_.GetDeviceQueue(device_, queue_family_index, queue_index, &queue);
+    if (device_table_.GetDeviceQueue != nullptr)
+    {
+        device_table_.GetDeviceQueue(device_, queue_family_index, queue_index, &queue);
+    }
 
     if (queue != VK_NULL_HANDLE)
     {
         // Because this queue was not allocated through the loader, it must be assigned a dispatch table.
         *reinterpret_cast<void**>(queue) = *reinterpret_cast<void**>(device_);
+        queue_map_[queue_family_index]   = queue;
     }
     else
     {
-        GFXRECON_LOG_ERROR("Failed to retrieve a queue for resource memory snapshot");
+        GFXRECON_LOG_ERROR("Failed to retrieve a queue for queue family %u during resource memory snapshot",
+                           queue_family_index);
     }
 
     return queue;
