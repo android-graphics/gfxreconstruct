@@ -9197,15 +9197,24 @@ VulkanReplayConsumerBase::OverrideQueuePresentKHR(PFN_vkQueuePresentKHR         
                 }
             }
         }
-        const auto* present_fence_info =
-            GetPNextMetaStruct<Decoded_VkSwapchainPresentFenceInfoEXT>(pPresentInfo->GetMetaStructPointer()->pNext);
-        if (present_fence_info != nullptr)
+    }
+
+    const auto* present_fence_info =
+        GetPNextMetaStruct<Decoded_VkSwapchainPresentFenceInfoEXT>(pPresentInfo->GetMetaStructPointer()->pNext);
+    if ((present_fence_info != nullptr) && !present_fence_info->pFences.IsNull() &&
+        (present_fence_info->pFences.GetPointer() != nullptr) && (pPresentInfo->GetPointer() != nullptr))
+    {
+        const format::HandleId* fences      = present_fence_info->pFences.GetPointer();
+        const size_t            fence_count = present_fence_info->pFences.GetLength();
+        const size_t count = std::min(static_cast<size_t>(pPresentInfo->GetPointer()->swapchainCount), fence_count);
+
+        for (size_t i = 0; i < count; ++i)
         {
-            for (uint32_t i = 0; i < pPresentInfo->GetPointer()->swapchainCount; ++i)
+            format::HandleId fence = fences[i];
+            if (fence != format::kNullHandleId)
             {
-                format::HandleId fence      = present_fence_info->pFences.GetPointer()[i];
                 VulkanFenceInfo* fence_info = object_info_table_->GetVkFenceInfo(fence);
-                if (fence_info)
+                if ((fence_info != nullptr) && (fence_info->handle != VK_NULL_HANDLE))
                 {
                     fence_info->shadow_signaled = true;
                     shadow_fences_.insert(fence_info->handle);
