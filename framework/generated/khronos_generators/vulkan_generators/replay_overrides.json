@@ -108,6 +108,7 @@
     "vkGetPhysicalDeviceToolProperties": "OverrideGetPhysicalDeviceToolProperties",
     "vkGetPhysicalDeviceToolPropertiesEXT": "OverrideGetPhysicalDeviceToolProperties",
     "vkBeginCommandBuffer": "OverrideBeginCommandBuffer",
+    "vkCreateCommandPool": "OverrideCreateCommandPool",
     "vkResetCommandPool": "OverrideResetCommandPool",
     "vkResetCommandBuffer": "OverrideResetCommandBuffer",
     "vkCmdWaitEvents": "OverrideCmdWaitEvents",
@@ -187,6 +188,10 @@
     "vkCmdEndRenderingKHR": "OverrideCmdEndRendering",
     "vkCreateIndirectExecutionSetEXT": "OverrideCreateIndirectExecutionSetEXT",
     "vkCmdPreprocessGeneratedCommandsEXT": "OverrideCmdPreprocessGeneratedCommandsEXT",
-    "vkCmdExecuteGeneratedCommandsEXT": "OverrideCmdExecuteGeneratedCommandsEXT"
+    "vkCmdExecuteGeneratedCommandsEXT": "OverrideCmdExecuteGeneratedCommandsEXT",
+    "vkCmdDispatch": "OverrideCmdDispatch",
+    "vkCmdDispatchIndirect": "OverrideCmdDispatchIndirect",
+    "vkCmdDispatchBase": "OverrideCmdDispatchBase",
+    "vkCmdDispatchBaseKHR": "OverrideCmdDispatchBase"
   }
 }

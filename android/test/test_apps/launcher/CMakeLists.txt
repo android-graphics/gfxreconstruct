@@ -52,9 +52,11 @@ set(GFXRECON_TEST_LAUNCHER_LINK_LIBRARIES
     gfxrecon-testapp-acquired-image
     gfxrecon-testapp-debug-utils
     gfxrecon-testapp-host-image-copy
+    gfxrecon-testapp-isolate-render-passes
     gfxrecon-testapp-multisample-depth
     gfxrecon-testapp-pipeline-binaries
     gfxrecon-testapp-shader-objects
+    gfxrecon-testapp-serialize-compute-and-transfer
     gfxrecon-testapp-sparse-resources
     gfxrecon-testapp-triangle
     gfxrecon-testapp-triangle-extra-device

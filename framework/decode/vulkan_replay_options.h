@@ -264,6 +264,13 @@ struct VulkanReplayOptions : public ReplayOptions
     /// Parameters to pass to the replay event plugin.
     std::string replay_event_plugin_params;
 
+    /// Isolate render passes by splitting the command buffer into multiple submits.
+    bool isolate_render_passes{ false };
+
+    /// Prevent compute dispatches from overlapping adjacent transfer work by injecting
+    /// a barrier before and after each dispatch.
+    bool serialize_compute_and_transfer{ false };
+
     void MaybeWaitBeforeFirstSubmit() const;
     void MaybeWaitBeforeFrame() const;
 };

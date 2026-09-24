@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 2025 LunarG, Inc.
+** Copyright (c) 2025-2026 LunarG, Inc.
 **
 ** Permission is hereby granted, free of charge, to any person obtaining a
 ** copy of this software and associated documentation files (the "Software"),
@@ -31,6 +31,8 @@
 #include <shader_objects_app.h>
 #include <sparse_resources_app.h>
 #include <debug_utils_app.h>
+#include <isolate_render_passes_app.h>
+#include <serialize_compute_and_transfer_app.h>
 #include <triangle_app.h>
 #include <triangle_extra_device_app.h>
 #include <deep_pnext_chain_app.h>
@@ -65,6 +67,8 @@ static const char* kAppNames[] = {
     "acquired-image",
     "debug-utils",
     "host-image-copy",
+    "isolate-render-passes",
+    "serialize-compute-and-transfer",
     "multisample-depth",
     "pipeline-binaries",
 #ifndef __ANDROID__
@@ -156,6 +160,14 @@ CreateTestApp(std::unique_ptr<gfxrecon::application::Application> application,
     else if (app_name == "host-image-copy")
     {
         app = std::make_unique<gfxrecon::test_app::host_image_copy::App>();
+    }
+    else if (app_name == "isolate-render-passes")
+    {
+        app = std::make_unique<gfxrecon::test_app::isolate_render_passes::App>();
+    }
+    else if (app_name == "serialize-compute-and-transfer")
+    {
+        app = std::make_unique<gfxrecon::test_app::serialize_compute_and_transfer::App>();
     }
     else if (app_name == "multisample-depth")
     {
